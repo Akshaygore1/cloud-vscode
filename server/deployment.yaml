@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: term-server-deployment
+  namespace: dep-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: term-server-deployment
+  template:
+    metadata:
+      labels:
+        app: term-server-deployment
+    spec:
+      containers:
+        - name: term-server-deployment-container
+          image: akshaygore7798/term-server
+      imagePullSecrets:
+        - name: regcred
