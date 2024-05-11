@@ -1,44 +1,41 @@
-import http from "http";
-import { spawn } from "node-pty";
-import { createServer } from "./server.js";
-import { Server as SocketIOServer } from "socket.io";
-import fs from "fs";
+import http from 'http';
+import { spawn } from 'node-pty';
+import { createServer } from './server.js';
+import { Server as SocketIOServer } from 'socket.io';
 
 const port = process.env.PORT || 3000;
 const app = createServer();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
-    cors: {
-        origin: "*",
-    },
+	cors: {
+		origin: '*',
+	},
 });
-await fs.writeFileSync(process.cwd() + "/public/" + Math.random() + ".txt", "adfkjalksdfj jsajkfsjkdf");
-app.get("/", (req, res) => {
-    const listFIleNames = fs.readdirSync(process.cwd() + "/public/");
-    res.send(listFIleNames);
-})
+app.get('/', (req, res) => {
+	res.send('Hello World!');
+});
 
-io.on("connection", (socket) => {
-    console.log("User Connected")
-    const ptyProcess = spawn("bash", [], {
-        name: "xterm-color",
-        cwd: process.env.INIT_CWD,
-        env: process.env,
-    });
+io.on('connection', (socket) => {
+	console.log('User Connected');
+	const ptyProcess = spawn('bash', [], {
+		name: 'xterm-color',
+		cwd: process.env.INIT_CWD,
+		env: process.env,
+	});
 
-    socket.on("command", (data) => {
-        ptyProcess.write(data);
-    });
+	socket.on('command', (data) => {
+		ptyProcess.write(data);
+	});
 
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-    });
+	socket.on('disconnect', () => {
+		console.log('Client disconnected');
+	});
 
-    ptyProcess.onData((data) => {
-        socket.emit("data", data);
-    });
+	ptyProcess.onData((data) => {
+		socket.emit('data', data);
+	});
 });
 
 server.listen(port, () => {
-    console.log(`API running on port ${port}`);
+	console.log(`API running on port ${port}`);
 });
