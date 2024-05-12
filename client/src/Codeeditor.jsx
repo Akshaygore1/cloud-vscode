@@ -1,11 +1,12 @@
 import { Editor } from '@monaco-editor/react';
 
-function Codeeditor() {
+function Codeeditor({ code }) {
 	return (
 		<Editor
-			height='52vh'
+			height='56.25vh'
 			defaultLanguage='javascript'
 			defaultValue='// some comment'
+			value={code.content}
 			theme='vs-dark'
 		/>
 	);

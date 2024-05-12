@@ -1,7 +1,8 @@
+import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
 import { useState } from 'react';
 
 // eslint-disable-next-line react/prop-types
-const FileExplorer = ({ data }) => {
+const FileExplorer = ({ data, onSelectFile }) => {
 	const [expandedFolders, setExpandedFolders] = useState([]);
 
 	const toggleFolder = (folderName) => {
@@ -13,10 +14,11 @@ const FileExplorer = ({ data }) => {
 	};
 
 	const renderNode = (node, path) => {
+		console.log('---', path);
 		const fullPath = path ? `${path}.${node.name}` : node.name;
+		const filePath = path ? `${path}/${node.name}` : node.name;
 		const isFolder = node.type === 'folder';
 		const isExpanded = expandedFolders.includes(fullPath);
-
 		return (
 			<div key={fullPath}>
 				<div
@@ -24,45 +26,38 @@ const FileExplorer = ({ data }) => {
 						display: 'flex',
 						alignItems: 'center',
 						cursor: isFolder ? 'pointer' : 'default',
-						padding: '8px',
 						marginLeft: isFolder ? '0px' : '16px',
-						backgroundColor: isFolder ? '#f0f0f0' : 'transparent',
-						border: '1px solid #ccc',
+						color: 'white',
+						padding: '8px',
 						borderRadius: '4px',
-						marginBottom: '4px',
+						transition: 'background-color 0.3s ease',
 					}}
-					onClick={() => isFolder && toggleFolder(fullPath)}
+					onClick={() =>
+						isFolder ? toggleFolder(fullPath) : onSelectFile(filePath)
+					}
 				>
-					{isFolder ? (
-						<span
-							style={{
-								display: 'inline-block',
-								width: '8px',
-								height: '8px',
-								marginRight: '8px',
-								border: 'solid',
-								borderWidth: '0 2px 2px 0',
-								transform: isExpanded ? 'rotate(-135deg)' : 'rotate(-45deg)',
-								borderColor: '#555',
-								transition: 'transform 0.2s',
-							}}
-						></span>
-					) : (
-						<span
-							style={{
-								display: 'inline-block',
-								width: '8px',
-								height: '8px',
-								marginRight: '8px',
-								border: 'solid',
-								borderWidth: '2px 2px 0 0',
-								transform: 'rotate(45deg)',
-								borderColor: '#555',
-								transition: 'transform 0.2s',
-							}}
-						></span>
+					{isFolder && (
+						<div style={{ display: 'flex', alignItems: 'center' }}>
+							{isExpanded ? (
+								<ChevronDown width={16} height={16} />
+							) : (
+								<ChevronRight width={16} height={16} />
+							)}
+						</div>
 					)}
-					<span>{node.name}</span>
+					<span
+						style={{
+							fontSize: '16px',
+							marginLeft: '4px',
+							display: 'flex',
+							alignItems: 'center',
+						}}
+					>
+						{isFolder ? (
+							<Folder width={16} height={16} style={{ marginRight: '8px' }} />
+						) : null}
+						{node.name}
+					</span>
 				</div>
 				{isFolder && isExpanded && (
 					<div style={{ marginLeft: '16px' }}>
@@ -76,17 +71,17 @@ const FileExplorer = ({ data }) => {
 	};
 
 	return (
-		<div>
-			<div
-				style={{
-					backgroundColor: '#ffffff',
-					borderRadius: '8px',
-					padding: '8px',
-					boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-				}}
-			>
-				{renderNode(data)}
-			</div>
+		<div
+			style={{
+				height: '99vh',
+				overflow: 'auto',
+				backgroundColor: '#0E1117',
+				maxWidth: '250px',
+				minWidth: '250px',
+			}}
+		>
+			<div style={{ padding: '10px', color: 'white' }}>File Explorer</div>
+			<div>{renderNode(data)}</div>
 		</div>
 	);
 };

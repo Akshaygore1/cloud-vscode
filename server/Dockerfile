@@ -31,8 +31,9 @@ WORKDIR /home/app
 # Copy the necessary files
 COPY index.js index.js
 COPY server.js server.js
+COPY utils.js /home/app/utils.js
 COPY package*.json .
-COPY public /home/app/public
+COPY user /home/app/user
 
 # Install dependencies
 RUN npm install

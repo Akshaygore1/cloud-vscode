@@ -9,3 +9,7 @@ body {
 	height: 100%;
 	font-size: 10px;
 }
+
+.xterm-viewport {
+	height: 280px;
+}

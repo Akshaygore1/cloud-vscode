@@ -2,6 +2,7 @@ import { Terminal } from '@xterm/xterm';
 import { useEffect, useRef } from 'react';
 import '@xterm/xterm/css/xterm.css';
 import socket from './api/socket';
+import './terminal.css';
 
 const term = new Terminal();
 
@@ -33,9 +34,7 @@ function Xterminalsocket() {
 		};
 	}, [terminalRef, socket]);
 
-	return (
-		<div ref={terminalRef} style={{ width: '50vw', height: '100%' }}></div>
-	);
+	return <div ref={terminalRef}></div>;
 }
 
 export default Xterminalsocket;
