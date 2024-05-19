@@ -5,6 +5,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import { generateFileTree } from './utils.js';
 import chokidar from 'chokidar';
 import fs from 'fs/promises';
+import path from 'path';
 const port = process.env.PORT || 3000;
 const app = createServer();
 const server = http.createServer(app);
@@ -26,10 +27,34 @@ app.get('/files', async (req, res) => {
 	res.json(tree);
 });
 
+const extensionToLanguage = {
+	'.js': 'javascript',
+	'.ts': 'typescript',
+	'.py': 'python',
+	'.java': 'java',
+	'.c': 'c',
+	'.cpp': 'cpp',
+	'.cs': 'csharp',
+	'.rb': 'ruby',
+	'.go': 'go',
+	'.php': 'php',
+	'.html': 'html',
+	'.css': 'css',
+	'.json': 'json',
+};
+
 app.get('/files/content', async (req, res) => {
-	const path = req.query.path;
-	const content = await fs.readFile(`./${path}`, 'utf-8');
-	return res.json({ content });
+	try {
+		const filePath = req.query.path;
+		const content = await fs.readFile(`./${filePath}`, 'utf-8');
+		const fileExtension = path.extname(filePath);
+		const language = extensionToLanguage[fileExtension] || 'plaintext';
+
+		return res.json({ content, fileExtension, language });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: 'Failed to read file' });
+	}
 });
 
 io.on('connection', (socket) => {

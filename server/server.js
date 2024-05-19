@@ -12,7 +12,7 @@ export const createServer = () => {
 		.use(morgan('dev'))
 		.use(urlencoded({ extended: true }))
 		.use(json())
-		.use(cors('*'))
+		.use(cors({ origin: 'http://localhost:5173' }))
 		.get('/message/:name', (req, res) => {
 			return res.json({ message: `hello ${req.params.name}` });
 		})

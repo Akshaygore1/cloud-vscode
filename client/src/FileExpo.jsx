@@ -15,7 +15,7 @@ const FileExplorer = ({ data, onSelectFile }) => {
 
 	const renderNode = (node, path) => {
 		console.log('---', path);
-		const fullPath = path ? `${path}.${node.name}` : node.name;
+		const fullPath = path ? `${path}/${node.name}` : node.name;
 		const filePath = path ? `${path}/${node.name}` : node.name;
 		const isFolder = node.type === 'folder';
 		const isExpanded = expandedFolders.includes(fullPath);
